@@ -14,9 +14,9 @@ function MakeSymmetric(L)
 end function;
 
 
-intrinsic MatsuoAlgebra(G::Grp, D::Set, eta::FldRatElt) -> AlgGen
+intrinsic MatsuoAlgebra(G::Grp, D::Set, eta::FldRatElt) -> AlgGen, AlgMat, SetIndx
   {
-  
+  Suppose G is a group and D is a set of involutions such that (G, D^G) is a 3-transposition group.  Returns the Matsuo algebra M_eta(G,D) together with the Frobenius form and the set D^G which corresponds to the axes.
   }
   require D subset G: "The set D must be a set of elements of G.";
   require forall{ d : d in D | Order(d) eq 2}: "The set D must be a set of involutions.";
