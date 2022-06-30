@@ -14,7 +14,7 @@ function MakeSymmetric(L)
 end function;
 
 
-intrinsic MatsuoAlgebra(G::Grp, D::Set, eta::FldRatElt) -> AlgGen, AlgMat, SetIndx
+intrinsic MatsuoAlgebra(G::Grp, D::Set, eta::FldElt) -> AlgGen, AlgMat, SetIndx
   {
   Suppose G is a group and D is a set of involutions such that (G, D^G) is a 3-transposition group.  Returns the Matsuo algebra M_eta(G,D) together with the Frobenius form and the set D^G which corresponds to the axes.
   }
@@ -54,4 +54,23 @@ intrinsic MatsuoAlgebra(G::Grp, D::Set, eta::FldRatElt) -> AlgGen, AlgMat, SetIn
   frob := Matrix(MakeSymmetric(frob));
   
   return Algebra<F, #axes | mult>, frob, axes;
+end intrinsic;
+
+intrinsic MatsuoAlgebra(RtSys::MonStgElt, eta::FldRatElt) -> AlgGen, AlgMat, SetIndx
+  {
+    Matsuo algebra for a Coxeter group of a give root system.
+  }
+  G := CoxeterGroup(RtSys);
+  inv := [ x[3] : x in ConjugacyClasses(G) | x[1] eq 2 ];
+  inv := [ x : x in inv | NormalClosure(G, sub<G|x>) eq G ];
+  inv := [ x : x in inv | 
+    forall{ y : y in OrbitClosure(G, {x}) | Order(x*y) le 3 } ];
+  M := [];
+  f := [];
+  for x in inv do
+    a,b := MatsuoAlgebra(G, {x}, eta);
+    Append(~M, a);
+    Append(~f, b);
+  end for;
+  return M, f;
 end intrinsic;
